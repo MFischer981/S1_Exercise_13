@@ -55,6 +55,9 @@
 */
 window.onload = init;
 
+var puzzleCells;
+var cellBackground;
+
 function init() {
       //insert the title for the first pizzle.
       document.getElementById("puzzleTitle").innerHTML = "Puzzle 1";
@@ -64,9 +67,14 @@ function init() {
 
       var puzzleButtons = document.getElementsByClassName("puzzles");
       for (var i = 0; i < puzzleButtons.length; i++) {
-            puzzleButtons[i].onclick = swapPuzzle()
+            puzzleButtons[i].onclick = swapPuzzle;
       }
+      setupPuzzle();
 }
+
+document.addEventListener("mouseup", endBackground);
+
+
 
 // retrieve the ID of the clickedButton
 function swapPuzzle(e) {
@@ -84,9 +92,40 @@ function swapPuzzle(e) {
                   document.getElementById("puzzle").innerHTML = drawPuzzle(puzzle3Hint, puzzle3Rating, puzzle3);
                   break;
       }
+      setupPuzzle();
 }
 
+function setupPuzzle() {
+      //match all of the data cells in the puzzle
+      puzzleCells = document.querySelectorAll("table#hanjieGrid td");
 
+      for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].style.backgroundColor = "rgb(233, 207, 29)";
+            puzzleCells[i].onmousedown = setBackground;
+      }
+}
+
+function setBackground(e) {
+      cellBackground = "rgb(101,101,101)"
+      e.target.style.backgroundColor = cellBackground;
+
+      //create an event listner for every puzzle cell
+      for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].addEventListener("mouseenter", extendBackground)
+      }
+}
+
+function extendBackground(e) {
+      e.target.style.backgroundColor = cellBackground;
+} 
+
+function endBackground() {
+      //remove the event listner for every puzzle cell
+      for (var i = 0; i < puzzleCells.length; i++) {
+            puzzleCells[i].removeEventListener("mouseenter", extendBackground);
+      }
+
+}
 
 /* ================================================================= */
 
